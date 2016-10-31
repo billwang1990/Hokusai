@@ -210,7 +210,7 @@ final public class HOKMenuView: UIView {
     }
     
     func tick(_ displayLink: CADisplayLink) {
-        if let presentationLayer = layer.presentation() as? CALayer {
+        if let presentationLayer = layer.presentation() {
             var verticalOffset = self.layer.frame.origin.y - presentationLayer.frame.origin.y
             
             // On dismissing, the offset should not be offended on the buttons.
@@ -273,7 +273,7 @@ final public class Hokusai: UIViewController, UIGestureRecognizerDelegate {
         kButtonWidth = view.frame.width * 0.8
         
         // Gesture Recognizer for outside the menu
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(Hokusai.dismiss))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(Hokusai.dismissMenu))
         tapGesture.numberOfTapsRequired = 1
         tapGesture.delegate = self
         self.view.addGestureRecognizer(tapGesture)
@@ -337,7 +337,7 @@ final public class Hokusai: UIViewController, UIGestureRecognizerDelegate {
     }
     
     // Add a button with a closure
-    public func addButton(_ title:String, action:()->Void) -> HOKButton {
+    public func addButton(_ title:String, action:@escaping ()->Void) -> HOKButton {
         let btn        = addButton(title)
         btn.action     = action
         btn.actionType = HOKAcitonType.closure
@@ -420,7 +420,7 @@ final public class Hokusai: UIViewController, UIGestureRecognizerDelegate {
         let colors = (self.colors == nil) ? colorScheme.getColors() : self.colors
         
         // Set a background color of Menuview
-        menuView.setShapeLayer(colors)
+        menuView.setShapeLayer(colors!)
         
         // Add a cancel button
         self.addCancelButton(cancelButtonTitle)
@@ -439,13 +439,13 @@ final public class Hokusai: UIViewController, UIGestureRecognizerDelegate {
         for btn in buttons {
             btn.layer.cornerRadius = kButtonHeight * 0.5
             btn.setFontName(fontName)
-            btn.setColor(colors)
+            btn.setColor(colors!)
         }
         
         // Style labels
         for label in labels {
             label.setFontName( label.isTitle ? fontName : lightFontName)
-            label.setColor(colors)
+            label.setColor(colors!)
         }
         
         // Set frames
@@ -492,7 +492,7 @@ final public class Hokusai: UIViewController, UIGestureRecognizerDelegate {
     }
     
     // Dismiss the menuview
-    public func dismiss() {
+    public func dismissMenu() {
         // Background and Menuview
         UIView.animate(withDuration: HOKConsts().animationDuration,
                                    delay: 0.0,
@@ -521,7 +521,7 @@ final public class Hokusai: UIViewController, UIGestureRecognizerDelegate {
                 print("Unknow action type for button")
             }
         }
-        dismiss()
+        dismissMenu()
     }
     
     
